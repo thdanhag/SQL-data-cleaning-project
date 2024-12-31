@@ -73,13 +73,13 @@ WHERE age > '150';
 ## Manipulating duplicate informations in dataset
 ### Filtering duplicate data
 
-OPT 1
+Solution 1
 ```
 SELECT *, COUNT(email) AS mail, COUNT(phone) as ph
 FROM club_member_info_cleaned GROUP BY email , phone
 HAVING mail > 1 AND ph > 1
 ```
-OPT 2
+Solution 2
 ```
 SELECT *
 FROM  club_member_info_cleaned as main
