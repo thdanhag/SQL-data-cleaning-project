@@ -90,3 +90,14 @@ JOIN (
      ) AS sub
 ON main.email=sub.email 
 WHERE mail > 1```
+
+
+
+```
+DELETE FROM club_member_info_cleaned 
+WHERE email IN (
+	        SELECT email
+		FROM club_member_info_cleaned GROUP BY email
+		HAVING COUNT(*) > 1
+		);
+  ```
