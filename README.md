@@ -71,33 +71,42 @@ SET age = 'null'
 WHERE age > '150';
 ```
 ## Manipulating duplicate informations in dataset
-### Filtering duplicate data
-
-Solution 1
-```
-SELECT *, COUNT(email) AS mail, COUNT(phone) as ph
-FROM club_member_info_cleaned GROUP BY email , phone
-HAVING mail > 1 AND ph > 1
-```
-Solution 2
-```
-SELECT *
-FROM  club_member_info_cleaned as main
-JOIN (
-      SELECT email, 
-	     COUNT(email) AS mail
-      FROM club_member_info_cleaned GROUP BY email
-     ) AS sub
-ON main.email=sub.email 
-WHERE mail > 1```
-
-
+### Step 1: Creating a new table and adding id column 
 
 ```
-DELETE FROM club_member_info_cleaned 
-WHERE email IN (
-	        SELECT email
-		FROM club_member_info_cleaned GROUP BY email
-		HAVING COUNT(*) > 1
-		);
-  ```
+CREATE TABLE club_member_info_cleaned_v2 (
+	    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	    full_name VARCHAR(50),
+	    age INTEGER,
+	    martial_status VARCHAR(50),
+	    email VARCHAR(50),
+	    phone VARCHAR(50),
+	    full_address VARCHAR(50),
+	    job_title VARCHAR(50),
+	    membership_date VARCHAR(50)
+```
+### Step 2: Insert original data into particularly the same column of new table
+```
+INSERT INTO club_member_info_cleaned_v2 (
+					full_name,
+					age,
+					martial_status,
+					email,
+					phone,
+					full_address,
+					job_title,
+					membership_date
+					)
+SELECT * FROM club_member_info_cleaned;
+```
+
+### Step 3: Checking a duplicate data in table
+```
+SELECT email,
+	   count(email)
+FROM club_member_info_cleaned_v3 GROUP BY email
+HAVING count(email)>1;
+```
+
+### Step 4: Removing duplicate data
+
