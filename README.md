@@ -100,13 +100,31 @@ INSERT INTO club_member_info_cleaned_v2 (
 SELECT * FROM club_member_info_cleaned;
 ```
 
-### Step 3: Checking a duplicate data in table
+### Step 3: Retriving duplicate value through duplicated id
 ```
-SELECT email,
-	   count(email)
-FROM club_member_info_cleaned_v3 GROUP BY email
-HAVING count(email)>1;
+SELECT main.id 
+FROM club_member_info_cleaned_v2 as main
+JOIN   (
+	SELECT email, MIN(id) as min_id 
+	FROM club_member_info_cleaned_v2 
+	Group By email 
+	) as sub
+ON main.email = sub.email
+WHERE main.id>sub.min_id
 ```
 
 ### Step 4: Removing duplicate data
+```
+DELETE FROM club_member_info_cleaned_v2 
+WHERE id IN
+			(SELECT main.id 
+			FROM club_member_info_cleaned_v2 as main
+			JOIN   (
+					SELECT email, MIN(id) as min_id 
+					FROM club_member_info_cleaned_v2 
+					Group By email 
+					) as sub
+			ON main.email = sub.email
+			WHERE main.id>sub.min_id);
+```
 
